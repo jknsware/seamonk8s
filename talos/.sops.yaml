@@ -1,0 +1,25 @@
+---
+creation_rules:
+  - path_regex: /*secrets(\.encrypted)?.yaml$
+    encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
+    age: age1vfs8uwycnuam0u4vxsdzz69ymj335qturd33nrrf2vauw7nuj9cqsz9plt
+
+  - path_regex: /*controlplane-nuc(\.encrypted)?.yaml$
+    encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
+    age: age1vfs8uwycnuam0u4vxsdzz69ymj335qturd33nrrf2vauw7nuj9cqsz9plt
+
+  - path_regex: /*controlplane-nuc3(\.encrypted)?.yaml$
+    encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
+    age: age1vfs8uwycnuam0u4vxsdzz69ymj335qturd33nrrf2vauw7nuj9cqsz9plt
+
+  - path_regex: /*controlplane-zotac(\.encrypted)?.yaml$
+    encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
+    age: age1vfs8uwycnuam0u4vxsdzz69ymj335qturd33nrrf2vauw7nuj9cqsz9plt
+
+  - path_regex: /*worker(\.encrypted)?.yaml$
+    encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
+    age: age1vfs8uwycnuam0u4vxsdzz69ymj335qturd33nrrf2vauw7nuj9cqsz9plt
+
+  - path_regex: /*talosconfig(\.encrypted)?$
+    encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
+    age: age1vfs8uwycnuam0u4vxsdzz69ymj335qturd33nrrf2vauw7nuj9cqsz9plt
