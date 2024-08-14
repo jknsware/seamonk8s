@@ -5,14 +5,25 @@
 
 This is the repo for my homelab.
 
+## Tasks
+
+- [ ] Reformat this README cause it stinks so far
+- [ ] Install steps for Talos OS
+- [ ] Bootstrapping the Kubernetes cluster
+- [ ] Upgrading the Talos OS
+- [ ] Managing secrets (SOPS/AGE or Sealed Secrets)
+- [ ] Cilium install and setup
+
 ## Talos OS
 
 I'm looking to level up my Kubernetes skills and have a few small form factor PCs laying around so I thought I'd put a cluster together to see what I could break. The first step for that is determining which OS I was going to use. I was going to go with Ubuntu since it's the OG of Kubernetes OSes but then I started looking around. In doing so, I found Talos OS which is built specifically for Kubernetes. To make it even better, it's light weight, is secure by default, and declarative on how to set it up. So here we go.
 
 Initially, I read this [article](https://mirceanton.com/posts/2023-11-28-the-best-os-for-kubernetes/) about Talos OS and watched some of their [YouTube build videos](https://www.youtube.com/@SideroLabs/videos?view=2&sort=dd&live_view=503&shelf_id=6) on how to get started. After more digging, I also found this great [blog post](https://a-cup-of.coffee/blog/talos/) on another setup of Talos OS. I'm not going to reinvent the wheel since those three resources were enough to get me started but I will do a high level list of steps I took to get my cluster running.
 
-1. Download the [Raspberry Pi Image Builder](https://www.raspberrypi.com/software/) and flash the USB stick.
+1. Download the [Raspberry Pi Image Builder](https://www.raspberrypi.com/software/) and flash the USB stick with the Talos OS.
 1. Boot each machine off the USB stick.
+1. Made sure that `talosctl` and `kubectl` were both installed on my Mac.
+1. Run `talosctl 
 
 ## Kubernetes
 
