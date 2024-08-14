@@ -13,6 +13,9 @@ This is the repo for my homelab.
 - [ ] Upgrading the Talos OS
 - [ ] Managing secrets (SOPS/AGE or Sealed Secrets)
 - [ ] Cilium install and setup
+- [ ] Get cert-manager running for TLS
+- [ ] Get Prometheus and Grafana running
+- [ ] Internal domain name setup
 
 ## Talos OS
 
