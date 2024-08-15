@@ -16,6 +16,7 @@ This is the repo for my homelab.
 - [ ] Get cert-manager running for TLS
 - [ ] Get Prometheus and Grafana running
 - [ ] Internal domain name setup
+- [ ] Raspberry Pi setup
 
 ## Talos OS
 
@@ -23,10 +24,21 @@ I'm looking to level up my Kubernetes skills and have a few small form factor PC
 
 Initially, I read this [article](https://mirceanton.com/posts/2023-11-28-the-best-os-for-kubernetes/) about Talos OS and watched some of their [YouTube build videos](https://www.youtube.com/@SideroLabs/videos?view=2&sort=dd&live_view=503&shelf_id=6) on how to get started. After more digging, I also found this great [blog post](https://a-cup-of.coffee/blog/talos/) on another setup of Talos OS. I'm not going to reinvent the wheel since those three resources were enough to get me started but I will do a high level list of steps I took to get my cluster running.
 
-1. Download the [Raspberry Pi Image Builder](https://www.raspberrypi.com/software/) and flash the USB stick with the Talos OS.
+1. Download the [Raspberry Pi Image Builder](https://www.raspberrypi.com/software/) and flash the USB stick with the Talos OS ISO.
 1. Boot each machine off the USB stick.
-1. Made sure that `talosctl` and `kubectl` were both installed on my Mac.
-1. Run `talosctl 
+1. Made sure that `talosctl` and `kubectl` were both installed on my Mac via `brew`.
+1. Create the patch file `01-cni-patch.yaml` to disable the default CNI and disable kube-proxy. Cilium will be replacing these.
+1. Create the patch file `02-controlplane-scheduling-patch.yaml` to enable workloads on the Control Plane nodes.
+1. Run `talosctl gen secrets` to generate the cluster secrets. This file shouldn't be checked into Github till encrypted with SOPS.
+1. Run `talosctl gen config seamonk8s https://192.168.1.200:6443 --with-secrets secrets.yaml --config-patch @01-cni-patch.yaml --config-patch @02-controlplane-scheduling-patch.yaml`.
+1. Since I run on dissimilar hardware, copy the `controlplane.yaml` to `controlplane-nuc.yaml`, `controlplane-nuc3.yaml`, and `controlplane-zotac.yaml`. Edit the network setup and install disk to match each one's hardware configuration.
+1. Copy the `talosconfig` file to `~/.talos/config`.
+1. Set the Talos context so that it points to all of the control plane endpoints with `talosctl config endpoint 192.168.1.201 192.168.1.202 192.168.1.203`. 
+1. Now we can bootstrap the Talos cluster. Until I get my Ubiquiti gateway, I'll have to connect to each of the nodes with a HDMI cable and see what the IP is currently set to. Hopefully soon I'll be able to statically assign these or use DHCP reservations.
+Run `talosctl apply-config -f controlplane-nuc.yaml -n 192.168.1.xxx --insecure` for each of the nodes. It can take awhile for the node to become healthy, so just be patient.
+1. Once the nodes become healthy, run `talosctl get members -n 192.168.1.xxx` to see the Talos cluster members.
+1. Bootstrap Kubernetes with `talosctl bootstrap -n 192.168.1.xxx` and wait for all the Kubernetes services to become healthy. It should look like this when ready:
+![image](../_docs/bootstrap-status.jpg)
 
 ## Kubernetes
 

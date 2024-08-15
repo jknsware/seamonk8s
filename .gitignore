@@ -5,11 +5,13 @@
 ################################################################################
 ### project-specific.gitignore
 ################################################################################
+controlplane.yaml
 controlplane-nuc.yaml
 controlplane-nuc3.yaml
 controlplane-zotac.yaml
 talosconfig
 worker.yaml
+secrets.yaml
 
 
 
