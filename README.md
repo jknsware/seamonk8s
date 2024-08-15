@@ -38,7 +38,7 @@ Initially, I read this [article](https://mirceanton.com/posts/2023-11-28-the-bes
 Run `talosctl apply-config -f controlplane-nuc.yaml -n 192.168.1.xxx --insecure` for each of the nodes. It can take awhile for the node to become healthy, so just be patient.
 1. Once the nodes become healthy, run `talosctl get members -n 192.168.1.xxx` to see the Talos cluster members.
 1. Bootstrap Kubernetes with `talosctl bootstrap -n 192.168.1.xxx` and wait for all the Kubernetes services to become healthy. It should look like this when ready:
-![image](../_docs/bootstrap-status.jpg)
+![image](_docs/bootstrap-status.jpg)
 
 ## Kubernetes
 
