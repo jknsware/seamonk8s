@@ -12,6 +12,7 @@ controlplane-zotac.yaml
 talosconfig
 worker.yaml
 secrets.yaml
+cilium.yaml
 
 
 

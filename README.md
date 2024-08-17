@@ -8,11 +8,10 @@ This is the repo for my homelab.
 ## Tasks
 
 - [ ] Reformat this README cause it stinks so far
-- [ ] Install steps for Talos OS
-- [ ] Bootstrapping the Kubernetes cluster
-- [ ] Upgrading the Talos OS
-- [ ] Managing secrets (SOPS/AGE or Sealed Secrets)
-- [ ] Cilium install and setup
+- [x] Install steps for Talos OS
+- [x] Bootstrapping the Kubernetes cluster
+- [x] Managing secrets (SOPS/AGE or Sealed Secrets)
+- [x] Cilium install and setup
 - [ ] Get cert-manager running for TLS
 - [ ] Get Prometheus and Grafana running
 - [ ] Internal domain name setup
@@ -39,8 +38,27 @@ Run `talosctl apply-config -f controlplane-nuc.yaml -n 192.168.1.xxx --insecure`
 1. Once the nodes become healthy, run `talosctl get members -n 192.168.1.xxx` to see the Talos cluster members.
 1. Bootstrap Kubernetes with `talosctl bootstrap -n 192.168.1.xxx` and wait for all the Kubernetes services to become healthy. It should look like this when ready:
 ![image](_docs/bootstrap-status.jpg)
+1. Get the Kubernestes context and merge it into `~/.kube/config` by running `talosctl kubeconfig -n 192.168.1.xxx`.
 
 ## Kubernetes
+
+Now that the Kubernetes cluster is bootstrapped, it's still not ready since we set CNI to none. You can see that with `kubectl get nodes` is showing Not Ready. ![image](_docs/kubectl-not-ready.jpg)
+
+### Cilium Install
+
+Now it's time to install [Cilium](https://docs.cilium.io/en/stable/installation/k8s-install-helm/). Cilium has instructions specifically for Talos along with the [install docs](https://www.talos.dev/v1.7/kubernetes-guides/network/deploying-cilium/) from Sidero Labs. I initially wanted to get this installed with a manifest I generated but ended up getting the error `Error: Unable to enable Hubble: release: not found`. Nothing on the internet about that error came up and I wasn't able to find a way around it. So we'll install Cilium and Hubble the CLI way.
+
+1. Download and install `cilium-cli` and `hubble`. [Hubble](https://docs.cilium.io/en/stable/gettingstarted/hubble_intro/) is the observability plane of Cilium.
+    ```bash
+    brew install cilium-cli hubble
+    ```
+1. Install Cilium with the config listed [here(https://www.talos.dev/v1.7/kubernetes-guides/network/deploying-cilium/#without-kube-proxy)].
+1. Check that Cilium is running with `cilium status --wait`.
+
+Now let's getting Hubble running. We'll do this the easy way.
+1. Run `cilium hubble enable`.
+1. Do `ciliumm status` again to make sure Hubble is enabled.
+    ![image](_docs/hubble-enabled.jpg)
 
 ## SOPS and AGE
 
