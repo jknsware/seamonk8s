@@ -52,13 +52,41 @@ Now it's time to install [Cilium](https://docs.cilium.io/en/stable/installation/
     ```bash
     brew install cilium-cli hubble
     ```
-1. Install Cilium with the config listed [here(https://www.talos.dev/v1.7/kubernetes-guides/network/deploying-cilium/#without-kube-proxy)].
+1. Install Cilium with the config listed [here](https://www.talos.dev/v1.7/kubernetes-guides/network/deploying-cilium/#without-kube-proxy) or in [here](cilium/cilium-install.md).
 1. Check that Cilium is running with `cilium status --wait`.
 
 Now let's getting Hubble running. We'll do this the easy way.
 1. Run `cilium hubble enable`.
 1. Do `ciliumm status` again to make sure Hubble is enabled.
     ![image](_docs/hubble-enabled.jpg)
+1. If you'd like to open the UI, run `cilium hubble disable` and then `cilium hubble enable --ui`. Run `cilium hubble ui` to start the port forwarder and it'll launch a browser window to `http://localhost:12000`.
+
+### Prometheus and Grafana Install
+
+I followed this [blog post](https://medium.com/devops-dev/talos-os-raspberry-fc5f327b7026) about setting up Prometheus and Grafana on Kubernetes. Here's the commands I ran to get it going.
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+kubectl create namespace monitoring
+kubectl label --overwrite ns monitoring pod-security.kubernetes.io/enforce=privileged
+helm install prometheus prometheus-community/prometheus -n monitoring --create-namespace --set server.persistentVolume.enabled=false --set alertmanager.enabled=false
+helm install grafana grafana/grafana -n monitoring --create-namespace
+```
+
+To access Grafana, do the following:
+1. Get your 'admin' user password by running:
+   `kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo`
+1. The Grafana server can be accessed via port 80 on the following DNS name from within your cluster:
+   `grafana.monitoring.svc.cluster.local`
+
+   Get the Grafana URL to visit by running these commands in the same shell:
+     ```bash
+     export POD_NAME=$(kubectl get pods --namespace monitoring -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana" -o jsonpath="{.items[0].metadata.name}")
+     kubectl --namespace monitoring port-forward $POD_NAME 3000
+     ```
+1. Login with the password from step 1 and the username: admin
 
 ## SOPS and AGE
 
